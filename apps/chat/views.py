@@ -259,9 +259,13 @@ class MessagesAPIView(APIView):
                 Q(sender=request.user) | Q(receiver=request.user)
             )
             message = get_object_or_404(queryset, id=id)
+
+            # Update is_read to True for the single message
+            if message.receiver == request.user and not message.is_read:
+                message.is_read = True
+                message.save()
+
             serializer = MessageSerializer(message)
-            serializer.update(is_read=True)
-            
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         receiver_id = request.query_params.get("user_id")
@@ -282,10 +286,11 @@ class MessagesAPIView(APIView):
             Q(sender=request.user, receiver=receiver)
             | Q(sender=receiver, receiver=request.user)
         )
-        serializer = MessageSerializer(messages, many=True)
-        import json
 
-        print(json.dumps(serializer.data, indent=4))
+        # Update is_read to True for all unread messages received by the user
+        messages.filter(receiver=request.user, is_read=False).update(is_read=True)
+
+        serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
