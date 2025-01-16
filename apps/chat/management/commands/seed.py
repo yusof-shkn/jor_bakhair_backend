@@ -24,7 +24,6 @@ class Command(BaseCommand):
                 password="Bozorg123",
                 first_name=name.capitalize(),
                 last_name="king",
-                profile_picture="profile_pictures/images.jpg",
             )
             users.append(user)
 

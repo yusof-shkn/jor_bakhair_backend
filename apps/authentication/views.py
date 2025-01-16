@@ -91,7 +91,9 @@ class LoginAPIView(APIView):
                         "email": user.email,
                         "first_name": user.first_name,
                         "last_name": user.last_name,
-                        "profile_picture": user.profile_picture.url or None,
+                        "profile_picture": (
+                            user.profile_picture.url if user.profile_picture else None
+                        ),
                     },
                     "access_token": access_token,  # Include the access token in the response
                     "refresh_token": "Set in the Cookie",

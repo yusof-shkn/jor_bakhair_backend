@@ -43,7 +43,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     profile_picture = models.ImageField(
-        upload_to="profile_pictures/", blank=True, null=True
+        upload_to="profile_pictures/",
+        blank=True,
+        null=True,
+        default="profile_pictures/default_profile.jpg",
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
